@@ -1,0 +1,132 @@
+{% extends 'admin_panel/admin_base.html' %}
+{% block Home %}
+
+<br>
+    <h4 class="text-center alert alert-dark mt-2"><b> Enquiry List </b></h4>
+<br>
+    <div class="container">
+
+      <div class="row ">
+  
+        <div class="col-sm-4 mt-2"  data-aos="zoom-in" data-aos-delay="400" data-aos-duration="1000">
+          <div class="card text-center">
+              <div class="card-header alert-dark">
+              <b>No Of Enquiries</b>
+              </div>
+              <div class="card-header  py-4">
+               <h3 class="card-title"></h3>
+       <h4 class='text-center'><b>{{count}}</b> </h4>
+              </div>
+          </div>
+      </div>
+      
+        
+      <div class="col-sm-4 mt-2"  data-aos="zoom-in" data-aos-delay="400" data-aos-duration="1000">
+        <div class="card text-center">
+            <div class="card-header alert-dark">
+            <b>Export To Excel</b>
+            </div>
+            <div class="card-header  py-4">
+             <h3 class="card-title"></h3>
+             <a href="{% url 'export_enquiry' %}" class="btn btnbg px-3"  data-aos="flip-up" data-aos-delay="600" data-aos-duration="1000" class="btn btn-success" data-toggle="modal" data-target="#modelExportData">Export</a>
+            </div>
+        </div>
+      </div>
+       
+<div class="col-sm-4 mt-2"  data-aos="zoom-in" data-aos-delay="400" data-aos-duration="1000">
+  <div class="card text-center">
+      <div class="card-header alert-dark">
+      <b>Other</b>
+      </div>
+      <div class="card-header  py-4">
+       <h3 class="card-title"></h3>
+       <a href="" class="btn btnbg"  data-aos="flip-up" data-aos-delay="600" data-aos-duration="1000" class="btn btn-success">---</a>
+      </div>
+  </div>
+</div>
+
+ </div> 
+    </div>
+<br>
+
+    <div class="table_scroll" >
+    <table class="table table-hover" >
+        {% if rec %}
+              <thead>
+                <tr style="background-color: rgb(3, 74, 116);">
+                  <th scope="col" class="text-center text-white" style="">Sr.No</th>
+                  <th scope="col" class="text-center text-white">Enquiry Number</th>
+                  <th scope="col" class="text-center text-white">full_name</th>
+                  <th scope="col" class="text-center text-white">Email</th>
+                  <th scope="col" class="text-center text-white">Mobile</th>
+                  <th scope="col" class="text-center text-white">Subject</th>
+                  <th scope="col" class="text-center text-white">Message</th>
+                  <th scope="col" class="text-center text-white">Enquiry Date</th>
+                  {% comment %} <th scope="col" class="text-center text-white">Resolved</th>
+                  <th scope="col" class="text-center text-white">Resolve Description</th>
+                  <th scope="col" class="text-center text-white">Resolve Date</th> {% endcomment %}
+                  <th scope="col" class="text-center text-white">Action</th>
+                </tr>
+              </thead>
+              <tbody>
+              {% for r in rec %}
+              
+                <tr class="text-left">      
+                  <td>{{forloop.counter}}</td>
+                  <td>{{r.id}}</td>
+                  <td>{{r.full_name}}</td>
+                  <td>{{r.email}}</td>
+                  <td>{{r.mobile}}</td>
+                  <td>{{r.subject|slice:10}}.....</td>
+                  <td>{{r.message|slice:10}}.....</td>
+                  <td>{{r.enquiry_date}}</td>
+                  {% comment %} {% if r.solved_or_not == "YES" %}
+                  <td>YES</td>
+                  {% else %}
+                  <td>-</td>
+                  {% endif %}
+                  
+                  
+                  {% if r.solved_or_not == "YES" %}
+                  <td>{{r.solution_description}}</td>
+                  {% else %}
+                  <td>-</td>
+                  {% endif %}
+                
+                  {% if r.solved_or_not == "YES" %}
+                  <td>{{r.solution_date}}</td>
+                  {% else %}
+                  <td>-</td>
+                  {% endif %} {% endcomment %}
+                  <td>
+                    <a href="{% url 'resolve_enquiry' r.id %}" class="btn btn-info px-4"><i class="bi bi-info-square"></i> More</a> &nbsp;&nbsp;&nbsp;
+                  <form action="{% url 'delete_enquiry' r.id %}" method='POST' class="d-inline" novalidate> {% csrf_token %}
+                  <input type="submit" value="Delete" class="btn btn-danger"></td></form>
+              
+                  </td>
+              </form>
+              </tr>
+              {% endfor %}
+        </tbody>
+      </table>
+    </div>
+      {% else %}
+      <center><h5>No Record Found</h5></center>
+      {% endif %}
+</center>
+    
+
+      
+<script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+<script>
+  {% for msg in messages %}
+  swal("Done", "{{msg}}", "success");
+{% endfor %}
+</script>
+
+<script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+<script>
+    AOS.init();
+  </script>
+
+{% endblock Home %}
